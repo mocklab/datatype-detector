@@ -1,12 +1,15 @@
 package io.mocklab.datatype;
 
 import com.neovisionaries.i18n.CountryCode;
+import com.neovisionaries.i18n.CurrencyCode;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.regex.Pattern;
+
+import static java.util.Arrays.asList;
 
 public enum DataType {
 
@@ -40,6 +43,7 @@ public enum DataType {
 
         }
     },
+
     COUNTRY_CODE_2 {
         @Override
         boolean matches(String fieldName, String value) {
@@ -54,6 +58,16 @@ public enum DataType {
                     .anyMatch(countryCode ->
                             countryCode.getAlpha3() != null &&
                             countryCode.getAlpha3().equalsIgnoreCase(value));
+        }
+    },
+    CURRENCY_CODE {
+        @Override
+        boolean matches(String fieldName, String value) {
+            return Arrays.stream(CurrencyCode.values())
+                    .anyMatch(currencyCode ->
+                            currencyCode.getCurrency() != null &&
+                            currencyCode.getCurrency().getCurrencyCode() != null &&
+                            currencyCode.getCurrency().getCurrencyCode().equalsIgnoreCase(value));
         }
     },
     ISO_INSTANT {
@@ -134,6 +148,19 @@ public enum DataType {
         }
     },
 
+    FIRST_NAME {
+        @Override
+        boolean matches(String fieldName, String value) {
+            String canonicalFieldName = canonicalise(fieldName);
+            return asList("firstname", "fname","forename", "christianname", "givenname").contains(canonicalFieldName);
+        }
+    },
+    LAST_NAME {
+        @Override
+        boolean matches(String fieldName, String value) {
+            String canonicalFieldName = canonicalise(fieldName);
+            return asList("surname", "familyname", "lastname", "sname", "lname").contains(canonicalFieldName);        }
+    },
     UNKNOWN {
         @Override
         boolean matches(String fieldName, String value) {
@@ -150,6 +177,14 @@ public enum DataType {
         }   catch (DateTimeParseException e) {
             return false;
         }
+    }
+
+    private static String canonicalise(String fieldName) {
+        String canonicalFieldName = fieldName
+                .replaceAll("\\p{Punct}+", "")
+                .replaceAll("\\s+", "");
+        return canonicalFieldName.toLowerCase();
+
     }
 
     private static final Pattern PARAGRAPH_PATTERN = Pattern.compile(

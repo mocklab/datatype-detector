@@ -88,4 +88,30 @@ public class EmailAddressTest {
         assertThat(dataTypeDetector.detect("This is not just a sentence.\nThis is a paragraph\n"), is(DataType.PARAGRAPH));
 
     }
+
+    @Test
+    public void matches_a_currency() {
+        assertThat(dataTypeDetector.detect("GBP"), is(DataType.CURRENCY_CODE));
+
+    }
+
+    @Test
+    public void matches_a_first_name() {
+        assertThat(dataTypeDetector.detect("f_name", "Whatever"), is(DataType.FIRST_NAME));
+        assertThat(dataTypeDetector.detect("First_Name", "Whatever"), is(DataType.FIRST_NAME));
+        assertThat(dataTypeDetector.detect("ChristianName", "Whatever"), is(DataType.FIRST_NAME));
+        assertThat(dataTypeDetector.detect("Givenname", "Whatever"), is(DataType.FIRST_NAME));
+        assertThat(dataTypeDetector.detect("forename", "Whatever"), is(DataType.FIRST_NAME));
+    }
+
+    @Test
+    public void matches_a_surname() {
+        assertThat(dataTypeDetector.detect("LastName", "Whatever"), is(DataType.LAST_NAME));
+        assertThat(dataTypeDetector.detect("Surname", "Whatever"), is(DataType.LAST_NAME));
+        assertThat(dataTypeDetector.detect("Family_Name", "Whatever"), is(DataType.LAST_NAME));
+        assertThat(dataTypeDetector.detect("Family Name", "Whatever"), is(DataType.LAST_NAME));
+
+    }
 }
+
+

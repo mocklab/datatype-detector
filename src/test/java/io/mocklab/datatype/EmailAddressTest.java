@@ -112,6 +112,24 @@ public class EmailAddressTest {
         assertThat(dataTypeDetector.detect("Family Name", "Whatever"), is(DataType.LAST_NAME));
 
     }
+    @Test
+    public void matches_a_zip_code() {
+        assertThat(dataTypeDetector.detect("zipcode", "12345"), is(DataType.ZIP_CODE));
+        assertThat(dataTypeDetector.detect("ZIP", "00000"), is(DataType.ZIP_CODE));
+        assertThat(dataTypeDetector.detect("Post Code", "99999"), is(DataType.ZIP_CODE));
+        assertThat(dataTypeDetector.detect("Postal_code", "12345"), is(DataType.ZIP_CODE));
+
+    }
+
+    @Test
+    public void matches_a_postcode() {
+        assertThat(dataTypeDetector.detect("YO30 6AS"), is(DataType.POSTCODE));
+        assertThat(dataTypeDetector.detect("YO306AS"), is(DataType.POSTCODE));
+
+
+    }
+
+
 }
 
 

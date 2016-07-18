@@ -6,7 +6,6 @@ import com.neovisionaries.i18n.CurrencyCode;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
@@ -19,18 +18,21 @@ public enum DataType {
             return value.matches("^.+@.+\\.[a-zA-Z]{2,}$");
         }
     },
-    SENTENCE {
+    ZIP_CODE {
         @Override
         boolean matches(String fieldName, String value) {
-            return value.matches(".*\\w+\\s+.*") && !value.contains("\n");
+            String canonicalFieldName = canonicalise(fieldName);
+            return asList("postcode", "postalcode", "zipcode", "zip").contains(canonicalFieldName)
+                    && value.matches("[0-9]{5}");
         }
     },
-    PARAGRAPH {
+    POSTCODE {
         @Override
         boolean matches(String fieldName, String value) {
-            return PARAGRAPH_PATTERN.matcher(value).matches() && value.contains("\n");
+            return value.matches("\\p{Alpha}+\\p{Alnum}{1,3}+\\s*\\p{Digit}+\\p{Alpha}{2}");
         }
     },
+
     UUID {
         @Override
         boolean matches(String fieldName, String value) {
@@ -160,6 +162,18 @@ public enum DataType {
         boolean matches(String fieldName, String value) {
             String canonicalFieldName = canonicalise(fieldName);
             return asList("surname", "familyname", "lastname", "sname", "lname").contains(canonicalFieldName);        }
+    },
+    SENTENCE {
+        @Override
+        boolean matches(String fieldName, String value) {
+            return value.matches(".*\\w+\\s+.*") && !value.contains("\n");
+        }
+    },
+    PARAGRAPH {
+        @Override
+        boolean matches(String fieldName, String value) {
+            return PARAGRAPH_PATTERN.matcher(value).matches() && value.contains("\n");
+        }
     },
     UNKNOWN {
         @Override

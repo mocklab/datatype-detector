@@ -76,4 +76,16 @@ public class EmailAddressTest {
 
     }
 
+    @Test
+    public void matches_a_sentence() {
+        assertThat(dataTypeDetector.detect("This is a sentence."), is(DataType.SENTENCE));
+
+
+    }
+
+    @Test
+    public void matches_a_paragraph() {
+        assertThat(dataTypeDetector.detect("This is not just a sentence.\nThis is a paragraph\n"), is(DataType.PARAGRAPH));
+
+    }
 }

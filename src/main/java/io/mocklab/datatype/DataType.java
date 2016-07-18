@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public enum DataType {
 
@@ -15,7 +16,18 @@ public enum DataType {
             return value.matches("^.+@.+\\.[a-zA-Z]{2,}$");
         }
     },
-
+    SENTENCE {
+        @Override
+        boolean matches(String fieldName, String value) {
+            return value.matches(".*\\w+\\s+.*") && !value.contains("\n");
+        }
+    },
+    PARAGRAPH {
+        @Override
+        boolean matches(String fieldName, String value) {
+            return PARAGRAPH_PATTERN.matcher(value).matches() && value.contains("\n");
+        }
+    },
     UUID {
         @Override
         boolean matches(String fieldName, String value) {
@@ -121,12 +133,15 @@ public enum DataType {
             return dateTimeMatches(DateTimeFormatter.BASIC_ISO_DATE, value);
         }
     },
+
     UNKNOWN {
         @Override
         boolean matches(String fieldName, String value) {
             return true;
         }
     };
+
+    abstract boolean matches(String fieldName, String value);
 
     private static boolean dateTimeMatches(DateTimeFormatter formatter, String value) {
         try {
@@ -137,5 +152,8 @@ public enum DataType {
         }
     }
 
-    abstract boolean matches(String fieldName, String value);
+    private static final Pattern PARAGRAPH_PATTERN = Pattern.compile(
+            ".*\\w+\\s+.*",
+            Pattern.MULTILINE + Pattern.DOTALL
+    );
 }

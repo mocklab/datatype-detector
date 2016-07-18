@@ -1,0 +1,19 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+}
+
+def versions = [
+    gradle: '2.14'
+]
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+dependencies {
+    compile "com.google.guava:guava:19.0"
+    
+    testCompile 'junit:junit:4.12'
+}

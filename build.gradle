@@ -12,8 +12,14 @@ def versions = [
 apply plugin: 'java'
 apply plugin: 'idea'
 
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
 dependencies {
     compile "com.google.guava:guava:19.0"
     
     testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
 }

@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-public class EmailAddressTest {
+public class DataTypeTest {
 
     private DataTypeDetector dataTypeDetector;
 
@@ -129,7 +129,25 @@ public class EmailAddressTest {
 
     }
 
+    @Test
+    public void matches_a_city() {
+        assertThat(dataTypeDetector.detect("Town","Cádiz"),is(DataType.CITY));
+        assertThat(dataTypeDetector.detect("Town","New York City"),is(DataType.CITY));
+        assertThat(dataTypeDetector.detect("Postal City","York"),is(DataType.CITY));
+        assertThat(dataTypeDetector.detect("Town/City","Camden Town"),is(DataType.CITY));
+    }
 
+    @Test
+    public void matches_a_county() {
+        assertThat(dataTypeDetector.detect("County", "Yorkshire"), is(DataType.COUNTY));
+        assertThat(dataTypeDetector.detect("county", "Lancashire"), is(DataType.COUNTY));
+        assertThat(dataTypeDetector.detect("Postal County", "Some county down south"), is(DataType.COUNTY));
+    }
+
+    @Test
+    public void matches_a_state() {
+        assertThat(dataTypeDetector.detect("State", "Georgia"), is(DataType.STATE));
+    }
 }
 
 

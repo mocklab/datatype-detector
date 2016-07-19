@@ -32,6 +32,31 @@ public enum DataType {
             return value.matches("\\p{Alpha}+\\p{Alnum}{1,3}+\\s*\\p{Digit}+\\p{Alpha}{2}");
         }
     },
+    CITY {
+        @Override
+        boolean matches(String fieldName, String value) {
+            String canonicalFieldName = canonicalise(fieldName);
+            return canonicalFieldName.contains("city") || canonicalFieldName.contains("town")
+                    && value.matches("\\w+\\s*+.*");
+        }
+    },
+    COUNTY {
+        @Override
+        boolean matches(String fieldName, String value) {
+            String canonicalFieldName = canonicalise(fieldName);
+            return canonicalFieldName.contains("county")
+                    && value.matches("\\w+\\s*+.*");
+
+        }
+    },
+    STATE {
+        @Override
+        boolean matches(String fieldName, String value) {
+            String canonicalFieldName = canonicalise(fieldName);
+            return canonicalFieldName.contains("state")
+                    && value.matches("\\w+\\s*+.*");
+        }
+    },
 
     UUID {
         @Override

@@ -148,6 +148,43 @@ public class DataTypeTest {
     public void matches_a_state() {
         assertThat(dataTypeDetector.detect("State", "Georgia"), is(DataType.STATE));
     }
+    @Test
+    public void matches_a_district() {
+        assertThat(dataTypeDetector.detect("District", "Whatever"), is(DataType.DISTRICT));
+    }
+    @Test
+    public void matches_an_address_line_1() {
+        assertThat(dataTypeDetector.detect("Address line 1","2 The Avenue"), is(DataType.ADDRESS_LINE_1));
+        assertThat(dataTypeDetector.detect("Address line 1","Apartment 4, Mill House, Bond Street"), is(DataType.ADDRESS_LINE_1));
+        assertThat(dataTypeDetector.detect("Address line one","Farmhouse, Farm Lane"), is(DataType.ADDRESS_LINE_1));
+    }
+    @Test
+    public void matches_an_address_not_line_1() {
+        assertThat(dataTypeDetector.detect("Address line 2","whatever"), is(DataType.ADDRESS_LINE_NOT_1));
+        assertThat(dataTypeDetector.detect("Address line 2","whatever, somewhere"), is(DataType.ADDRESS_LINE_NOT_1));
+        assertThat(dataTypeDetector.detect("Address line two","32 whatevers"), is(DataType.ADDRESS_LINE_NOT_1));
+    }
+
+    @Test
+    public void matches_a_company_name() {
+        assertThat(dataTypeDetector.detect("Company name","Bresmed"), is(DataType.COMPANY_NAME));
+        assertThat(dataTypeDetector.detect("Firm","energized work"), is(DataType.COMPANY_NAME));
+    }
+
+    @Test
+    public void matches_an_international_phone_number() {
+        assertThat(dataTypeDetector.detect("+447590385897"), is(DataType.INTERNATIONAL_PHONE_NUMBER));
+        assertThat(dataTypeDetector.detect("+447590-385897"), is(DataType.INTERNATIONAL_PHONE_NUMBER));
+        assertThat(dataTypeDetector.detect("+44)(*&^%$£7590-385897"), is(DataType.INTERNATIONAL_PHONE_NUMBER));
+
+    }
+    @Test
+    public void matches_a_local_phone_number() {
+        assertThat(dataTypeDetector.detect("07590385897"), is(DataType.LOCAL_PHONE_NUMBER));
+        assertThat(dataTypeDetector.detect("07590-385897"), is(DataType.LOCAL_PHONE_NUMBER));
+        assertThat(dataTypeDetector.detect("222-222-2222"), is(DataType.LOCAL_PHONE_NUMBER));
+    }
 }
+
 
 

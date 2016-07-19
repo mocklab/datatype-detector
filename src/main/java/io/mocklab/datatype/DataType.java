@@ -18,6 +18,23 @@ public enum DataType {
             return value.matches("^.+@.+\\.[a-zA-Z]{2,}$");
         }
     },
+    ADDRESS_LINE_1 {
+        @Override
+        boolean matches(String fieldName, String value) {
+            String canonicalFieldName = canonicalise(fieldName);
+            return canonicalFieldName.contains("addressline1") || canonicalFieldName.contains("addresslineone")
+                    && value.matches("\\w+\\s*+.*");
+        }
+    },
+    ADDRESS_LINE_NOT_1 {
+        @Override
+        boolean matches(String fieldName, String value) {
+            String canonicalFieldName = canonicalise(fieldName);
+            return canonicalFieldName.contains("addressline")
+                && (!canonicalFieldName.contains("addressline1") || !canonicalFieldName.contains("addresslineone"))
+                    && value.matches("\\w+\\s*+.*");
+        }
+    },
     ZIP_CODE {
         @Override
         boolean matches(String fieldName, String value) {
@@ -57,7 +74,13 @@ public enum DataType {
                     && value.matches("\\w+\\s*+.*");
         }
     },
-
+    DISTRICT {
+        @Override
+        boolean matches(String fieldName, String value) {
+            String canonicalFieldName = canonicalise(fieldName);
+            return canonicalFieldName.contains("district")
+                    && value.matches("\\w+\\s*+.*");        }
+    },
     UUID {
         @Override
         boolean matches(String fieldName, String value) {
@@ -70,7 +93,6 @@ public enum DataType {
 
         }
     },
-
     COUNTRY_CODE_2 {
         @Override
         boolean matches(String fieldName, String value) {
@@ -97,6 +119,14 @@ public enum DataType {
                             currencyCode.getCurrency().getCurrencyCode().equalsIgnoreCase(value));
         }
     },
+    COMPANY_NAME {
+        @Override
+        boolean matches(String fieldName, String value) {
+            String canonicalFieldName = canonicalise(fieldName);
+            return asList("companyname","compname","company","business","businessname","firm","firmname").contains(canonicalFieldName);
+        }
+    },
+
     ISO_INSTANT {
         @Override
         boolean matches(String fieldName, String value) {
@@ -174,7 +204,19 @@ public enum DataType {
             return dateTimeMatches(DateTimeFormatter.BASIC_ISO_DATE, value);
         }
     },
-
+    INTERNATIONAL_PHONE_NUMBER {
+        @Override
+        boolean matches(String fieldName, String value) {
+            String canonicalValue = canonicalisePhoneNumber(value);
+            return canonicalValue.matches("\\++\\p{Digit}{11,12}");
+        }
+    },
+    LOCAL_PHONE_NUMBER {
+        @Override
+        boolean matches(String fieldName, String value) {
+            String canonicalValue = DataType.canonicalisePhoneNumber(value);
+            return canonicalValue.matches("\\p{Digit}{10,11}");        }
+    },
     FIRST_NAME {
         @Override
         boolean matches(String fieldName, String value) {
@@ -225,6 +267,17 @@ public enum DataType {
         return canonicalFieldName.toLowerCase();
 
     }
+
+    private static String canonicalisePhoneNumber(String value) {
+        String canonicalValue = value
+               // .replaceAll("[\\p{Punct}[^\u002b]+]", "")
+               // .replaceAll("\\s+", "");
+                .replaceAll("[^\\p{Alnum}+]","");
+        return canonicalValue;
+
+    }
+
+
 
     private static final Pattern PARAGRAPH_PATTERN = Pattern.compile(
             ".*\\w+\\s+.*",

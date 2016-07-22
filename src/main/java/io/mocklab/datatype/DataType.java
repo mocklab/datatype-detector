@@ -3,11 +3,16 @@ package io.mocklab.datatype;
 import com.neovisionaries.i18n.CountryCode;
 import com.neovisionaries.i18n.CurrencyCode;
 
+import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
+import java.awt.color.ColorSpace;
+import java.util.List;
 
+import static java.awt.Color.*;
 import static java.util.Arrays.asList;
 
 public enum DataType {
@@ -230,6 +235,14 @@ public enum DataType {
             String canonicalFieldName = canonicalise(fieldName);
             return asList("surname", "familyname", "lastname", "sname", "lname").contains(canonicalFieldName);        }
     },
+    COLOUR {
+        @Override
+        boolean matches(String fieldName, String value) {
+            String canonicalColourName = canonicaliseValue(value);
+
+            return COLOURS.stream().anyMatch(canonicalColourName::contains);
+       }
+    },
     SENTENCE {
         @Override
         boolean matches(String fieldName, String value) {
@@ -267,20 +280,65 @@ public enum DataType {
         return canonicalFieldName.toLowerCase();
 
     }
+    private static String canonicaliseValue(String value) {
+        String canonicalValue = value
+                .replaceAll("\\p{Punct}+", "")
+                .replaceAll("\\s+", "");
+        return canonicalValue.toLowerCase();
+
+    }
 
     private static String canonicalisePhoneNumber(String value) {
         String canonicalValue = value
-               // .replaceAll("[\\p{Punct}[^\u002b]+]", "")
-               // .replaceAll("\\s+", "");
                 .replaceAll("[^\\p{Alnum}+]","");
         return canonicalValue;
 
     }
-
-
-
     private static final Pattern PARAGRAPH_PATTERN = Pattern.compile(
             ".*\\w+\\s+.*",
             Pattern.MULTILINE + Pattern.DOTALL
     );
+
+
+    private static final List<String> COLOURS = asList("ivory",
+            "red",
+            "orange",
+            "yellow",
+            "green",
+            "blue",
+            "violet",
+            "black",
+            "white",
+            "beige",
+            "wheat",
+            "tan",
+            "khaki",
+            "silver",
+            "gray",
+            "charcoal",
+            "navy blue",
+            "royal blue",
+            "medium blue",
+            "azure",
+            "magenta",
+            "cyan",
+            "aquamarine",
+            "teal",
+            "forest Green",
+            "olive",
+            "chartreuse",
+            "lime",
+            "golden",
+            "goldenrod",
+            "coral",
+            "salmon",
+            "hot Pink",
+            "fuchsia",
+            "puce",
+            "mauve",
+            "lavender",
+            "plum",
+            "indigo",
+            "maroon",
+            "crimson");
 }

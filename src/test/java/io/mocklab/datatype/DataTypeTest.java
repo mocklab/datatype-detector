@@ -185,6 +185,13 @@ public class DataTypeTest {
         assertThat(dataTypeDetector.detect("07590-385897"), is(DataType.LOCAL_PHONE_NUMBER));
         assertThat(dataTypeDetector.detect("222-222-2222"), is(DataType.LOCAL_PHONE_NUMBER));
     }
+    @Test
+    public void matches_a_color() {
+        assertThat(dataTypeDetector.detect("Red"), is(DataType.COLOUR));
+        assertThat(dataTypeDetector.detect("magenta"), is(DataType.COLOUR));
+        assertThat(dataTypeDetector.detect("navy blue"), is(DataType.COLOUR));
+        assertThat(dataTypeDetector.detect("light blue"), is(DataType.COLOUR));
+    }
 }
 
 

@@ -192,6 +192,19 @@ public class DataTypeTest {
         assertThat(dataTypeDetector.detect("navy blue"), is(DataType.COLOUR));
         assertThat(dataTypeDetector.detect("light blue"), is(DataType.COLOUR));
     }
+    @Test
+    public void matches_a_gender() {
+        assertThat(dataTypeDetector.detect("Gender","male"), is(DataType.GENDER));
+        assertThat(dataTypeDetector.detect("sex", "Fmale"), is(DataType.GENDER));
+        assertThat(dataTypeDetector.detect("", "Fmale"), is(DataType.GENDER));
+        assertThat(dataTypeDetector.detect("gender", ""), is(DataType.GENDER));
+    }
+    @Test
+    public void matches_a_job_title() {
+        assertThat(dataTypeDetector.detect("Job title", "Professor"), is(DataType.JOB_TITLE));
+        assertThat(dataTypeDetector.detect("Job", ""), is(DataType.JOB_TITLE));
+        assertThat(dataTypeDetector.detect("profession", "Professor"), is(DataType.JOB_TITLE));
+    }
 }
 
 

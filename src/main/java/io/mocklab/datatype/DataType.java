@@ -131,7 +131,15 @@ public enum DataType {
             return asList("companyname","compname","company","business","businessname","firm","firmname").contains(canonicalFieldName);
         }
     },
-
+    GENDER {
+        @Override
+        boolean matches(String fieldName, String value) {
+            String canonicalFieldName = canonicalise(fieldName);
+            String canonicalValue = canonicaliseValue(value);
+            return asList("gender", "sex").contains(canonicalFieldName)
+                    || asList("male", "female", "fmale", "transexual", "trans", "other").contains(canonicalValue);
+        }
+    },
     ISO_INSTANT {
         @Override
         boolean matches(String fieldName, String value) {
@@ -156,8 +164,6 @@ public enum DataType {
             return dateTimeMatches(DateTimeFormatter.ISO_DATE_TIME, value);
         }
     },
-
-
     ISO_LOCAL_DATE {
         @Override
         boolean matches(String fieldName, String value) {
@@ -182,8 +188,6 @@ public enum DataType {
             return dateTimeMatches(DateTimeFormatter.ISO_TIME, value);
         }
     },
-
-
     ISO_ZONED_DATE_TIME {
         @Override
         boolean matches(String fieldName, String value) {
@@ -202,7 +206,6 @@ public enum DataType {
             return dateTimeMatches(DateTimeFormatter.ISO_WEEK_DATE, value);
         }
     },
-
     BASIC_ISO_DATE {
         @Override
         boolean matches(String fieldName, String value) {
@@ -239,9 +242,15 @@ public enum DataType {
         @Override
         boolean matches(String fieldName, String value) {
             String canonicalColourName = canonicaliseValue(value);
-
             return COLOURS.stream().anyMatch(canonicalColourName::contains);
        }
+    },
+    JOB_TITLE {
+        @Override
+        boolean matches(String fieldName, String value) {
+            String canonicalFieldName = canonicalise(fieldName);
+            return asList("profession","jobtitle","job").contains(canonicalFieldName);
+        }
     },
     SENTENCE {
         @Override

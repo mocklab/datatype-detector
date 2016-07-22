@@ -221,7 +221,7 @@ public enum DataType {
         @Override
         boolean matches(String fieldName, String value) {
             String canonicalFieldName = canonicalise(fieldName);
-            return asList("firstname", "fname","forename", "christianname", "givenname").contains(canonicalFieldName);
+            return asList("name", "firstname", "fname","forename", "christianname", "givenname").contains(canonicalFieldName);
         }
     },
     LAST_NAME {

@@ -102,6 +102,7 @@ public class DataTypeTest {
         assertThat(dataTypeDetector.detect("ChristianName", "Whatever"), is(DataType.FIRST_NAME));
         assertThat(dataTypeDetector.detect("Givenname", "Whatever"), is(DataType.FIRST_NAME));
         assertThat(dataTypeDetector.detect("forename", "Whatever"), is(DataType.FIRST_NAME));
+        assertThat(dataTypeDetector.detect("name", "Whatever"), is(DataType.FIRST_NAME));
     }
 
     @Test
@@ -159,7 +160,7 @@ public class DataTypeTest {
         assertThat(dataTypeDetector.detect("Address line one","Farmhouse, Farm Lane"), is(DataType.ADDRESS_LINE_1));
     }
     @Test
-    public void matches_an_address_not_line_1() {
+    public void matches_an_addressreturn_not_line_1() {
         assertThat(dataTypeDetector.detect("Address line 2","whatever"), is(DataType.ADDRESS_LINE_NOT_1));
         assertThat(dataTypeDetector.detect("Address line 2","whatever, somewhere"), is(DataType.ADDRESS_LINE_NOT_1));
         assertThat(dataTypeDetector.detect("Address line two","32 whatevers"), is(DataType.ADDRESS_LINE_NOT_1));
